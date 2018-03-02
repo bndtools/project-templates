@@ -1,0 +1,21 @@
+-buildpath: \
+	osgi.annotation; version=7.0.0,\
+	osgi.core; version=7.0.0,\
+	osgi.cmpn; version=7.0.0,\
+	org.apache.aries.jpa.javax.persistence_2.1;version=2.7.0
+
+-testpath: \
+	\${junit},\
+	\${mockito},\
+	\${mockito-deps}
+
+$if(javaLevel)$
+javac.source: $javaLevel$
+javac.target: $javaLevel$
+$endif$
+
+Bundle-Version: 0.0.0.\${tstamp}
+
+-includeresource: resources
+
+-privatepackage $basePackageName$.*

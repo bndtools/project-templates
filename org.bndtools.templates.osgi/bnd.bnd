@@ -1,4 +1,4 @@
-Bundle-Version: 4.0.0.${tstamp}
+Bundle-Version: 7.0.0.${tstamp}
 
 -includeresource: resources
 -resourceonly: true
@@ -42,6 +42,34 @@ project-template-servlet:\
 		help=servlet-help.xml;\
 		icon="${servlet-icon}"
 
+project-template-jax-rs:\
+	org.bndtools.template; org.bndtools.template=project;\
+		name="JAX-RS Resource Component";\
+		category=${category};\
+		ranking:Double=997;\
+		dir=templates/jax-rs;\
+		help=jax-rs-help.xml;\
+		icon="${jax-rs-icon}"
+
+project-template-jpa-dao:\
+	org.bndtools.template; org.bndtools.template=project;\
+		name="JPA Data Access Component";\
+		category=${category};\
+		ranking:Double=996;\
+		dir=templates/jpa-dao;\
+		help=jpa-dao-help.xml;\
+		icon="${jpa-dao-icon}"
+		
+project-template-app:\
+	org.bndtools.template;\
+		org.bndtools.template=project; \
+		name=Application Project; \
+		category=${category}; \
+		ranking:Double=1000;\
+		dir=templates/app; \
+		icon="${app-icon}";\
+		help=app-help.xml
+
 launch-template-felix:\
 	org.bndtools.template; org.bndtools.template=bndrun;\
 		name=Felix 4+;\
@@ -56,12 +84,19 @@ Provide-Capability: \
 	${project-template-api},\
 	${project-template-integration-test},\
 	${project-template-servlet},\
+	${project-template-jax-rs},\
+	${project-template-jpa-dao},\
+	${project-template-app},\
 	${launch-template-felix}
 
-dataurl: data:image/gif;base64
+gifdataurl: data:image/gif;base64
+pngdataurl: data:image/png;base64
 
-api-icon: ${dataurl},${base64;icons/script.png}
-component-icon: ${dataurl},${base64;icons/cog.gif}
-integration-test-icon: ${dataurl},${base64;icons/junit.gif}
-servlet-icon: ${dataurl},${base64;icons/servlet.gif}
-felix-icon: ${dataurl},${base64;icons/felix.gif}
+api-icon: ${pngdataurl},${base64;icons/script.png}
+component-icon: ${gifdataurl},${base64;icons/cog.gif}
+integration-test-icon: ${gifdataurl},${base64;icons/junit.gif}
+servlet-icon: ${gifdataurl},${base64;icons/servlet.gif}
+jax-rs-icon: ${pngdataurl},${base64;icons/whiteboard.png}
+jpa-dao-icon: ${pngdataurl},${base64;icons/database.png}
+app-icon: ${gifdataurl},${base64;icons/jar_exec.gif}
+felix-icon: ${gifdataurl},${base64;icons/felix.gif}

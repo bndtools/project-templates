@@ -31,5 +31,5 @@ Bundle-Version: 0.0.0.\${tstamp}
 -runsystempackages.objenesis: sun.misc,sun.reflect
 
 # Use Felix by default
--runfw: org.apache.felix.framework;version=5
+-runfw: org.eclipse.osgi;version=3.13
 -runvm: -ea

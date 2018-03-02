@@ -1,0 +1,13 @@
+<form>
+	<p>Creates a project defining a JPA based data access component using the JPA Service and the Transaction Control service. The following dependencies are added to the build path:</p>
+	<li>OSGi Annotation 7.0.0</li>
+	<li>OSGi Core 7.0.0</li>
+	<li>OSGi Compendium 7.0.0</li>
+	<li>JPA API 2.1</li>
+	<p>... and the following are added to the test path:</p>
+	<li>JUnit 4</li>
+	<li>Mockito 2.13.0</li>
+	<li>Objenesis 2.6</li>
+	<li>Byte Buddy 1.7.9</li>
+	<li>Byte Buddy Agent 1.7.9</li>
+</form>
