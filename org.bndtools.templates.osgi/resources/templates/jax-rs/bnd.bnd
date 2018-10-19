@@ -2,7 +2,7 @@
 	osgi.annotation; version=7.0.0,\
 	osgi.core; version=7.0.0,\
 	osgi.cmpn; version=7.0.0,\
-	org.apache.aries.javax.jax.rs-api; version=0.0.1
+	org.apache.aries.javax.jax.rs-api; version=1.0.0
 
 -testpath: \
 	\${junit},\
