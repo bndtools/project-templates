@@ -30,6 +30,6 @@ Bundle-Version: 0.0.0.\${tstamp}
 # Needed for Mockito's mocking to work
 -runsystempackages.objenesis: sun.misc,sun.reflect
 
-# Use Felix by default
+# Use Equinox by default
 -runfw: org.eclipse.osgi;version=3.13
 -runvm: -ea
