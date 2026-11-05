@@ -1,0 +1,5 @@
+testbed/*.sh text eol=lf
+testbed/lib/* text eol=lf
+tests/test_testbed.bats text eol=lf
+tests/fixtures/testbed/java text eol=lf
+.github/workflows/testbed.yml text eol=lf

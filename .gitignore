@@ -5,3 +5,5 @@ generated/
 .classpath
 .project
 .settings/
+testbed/.cache/
+testbed/work/
