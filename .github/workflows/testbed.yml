@@ -1,0 +1,143 @@
+name: Project template testbed
+
+on:
+  push:
+    paths:
+      - 'org.bndtools.templates.osgi/resources/templates/**'
+      - 'cnf/**'
+      - 'tests/**'
+      - 'testbed/**'
+      - '.github/workflows/testbed.yml'
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '37 4 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: project-testbed-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    name: Select bnd versions
+    runs-on: ubuntu-latest
+    outputs:
+      bnd: ${{ steps.versions.outputs.bnd }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Release, newer RC and latest snapshot
+        id: versions
+        shell: bash
+        run: |
+          versions="$(bash testbed/lib/fetch-bnd.sh --matrix)"
+          matrix="$(printf '%s\n' "$versions" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+          echo "bnd=$matrix" >> "$GITHUB_OUTPUT"
+          printf 'bnd matrix: %s\n' "$matrix" >> "$GITHUB_STEP_SUMMARY"
+
+  testbed:
+    name: ${{ matrix.os }} / bnd ${{ matrix.bnd }}
+    needs: plan
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        bnd: ${{ fromJSON(needs.plan.outputs.bnd) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install Bash and GNU timeout on macOS
+        if: runner.os == 'macOS'
+        run: brew install bash coreutils
+
+      - name: Test Bash harness
+        shell: bash
+        run: |
+          git clone --quiet --depth 1 --branch v1.11.0 https://github.com/bats-core/bats-core.git "$RUNNER_TEMP/bats-core"
+          BASH_BIN=bash
+          if [[ "$RUNNER_OS" == macOS ]]; then
+            BASH_BIN="$(brew --prefix)/bin/bash"
+            export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+          fi
+          "$BASH_BIN" "$RUNNER_TEMP/bats-core/bin/bats" tests/test_testbed.bats
+
+      - name: ShellCheck
+        if: runner.os == 'Linux'
+        run: shellcheck --severity=warning -x -P SCRIPTDIR testbed/testbed.sh testbed/lib/common.sh testbed/lib/fetch-bnd.sh testbed/lib/matrix.sh testbed/lib/run.sh tests/fixtures/testbed/java tests/test_testbed.bats
+
+      - name: Test project templates
+        shell: bash
+        run: |
+          BASH_BIN=bash
+          if [[ "$RUNNER_OS" == macOS ]]; then
+            BASH_BIN="$(brew --prefix)/bin/bash"
+            export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+          fi
+          "$BASH_BIN" testbed/testbed.sh --bnd "${{ matrix.bnd }}" --work-dir testbed/work/ci
+
+      - name: Job summary
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f testbed/work/ci/REPORT.md ]]; then
+            sed -n '1,/^## Logs/p' testbed/work/ci/REPORT.md >> "$GITHUB_STEP_SUMMARY"
+            printf '\nFull logs and report: testbed-${{ matrix.os }}-${{ matrix.bnd }} artifact.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload report and failed workspace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testbed-${{ matrix.os }}-${{ matrix.bnd }}
+          path: |
+            testbed/work/ci
+            !testbed/work/ci/**/cnf/cache/**
+            !testbed/work/ci/**/generated/**/*.jar
+          if-no-files-found: warn
+          retention-days: 14
+
+  summary:
+    name: Combined report
+    needs: testbed
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: testbed-*
+          path: reports
+      - name: Combine matrix results
+        shell: bash
+        run: |
+          {
+            printf '# Project Template Testbed Matrix\n\n| Job | Result | Report |\n| --- | --- | --- |\n'
+            for directory in reports/testbed-*; do
+              [[ -d "$directory" ]] || continue
+              name="${directory#reports/}"
+              if [[ -f "$directory/REPORT.md" ]]; then
+                result="$(grep -m1 '^Result:' "$directory/REPORT.md")"
+                printf '| %s | %s | [REPORT.md](%s/REPORT.md) |\n' "$name" "$result" "$name"
+              else
+                printf '| %s | No report | - |\n' "$name"
+              fi
+            done
+          } > reports/REPORT.md
+          cat reports/REPORT.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: testbed-all
+          path: reports
+          retention-days: 14

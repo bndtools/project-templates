@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+case "$1" in
+  -version) printf 'openjdk version "17.0.0"\n' >&2 ;;
+  *Xml.java)
+    case "$2" in
+      rc) [[ -z "${TESTBED_MOCK_RC:-}" ]] || printf '%s\n' "$TESTBED_MOCK_RC" ;;
+      metadata)
+        case "$4" in
+          release) printf '7.4.0\n' ;;
+          latest) printf '7.5.0-SNAPSHOT\n' ;;
+          snapshot) printf '7.5.0-20261030.120000-1\n' ;;
+        esac ;;
+      junit) printf 'JUnit: 1 tests, no failures or errors\n' ;;
+    esac ;;
+  -cp) printf 'OK (1 test)\n' ;;
+  -jar)
+    shift 2
+    case "$1" in
+      version) printf '7.4.0-mock\n' ;;
+      build)
+        if [[ "${TESTBED_MOCK_FAIL_BUILD:-0}" == 1 && "$PWD" == */template-ds ]]; then
+          printf 'mock build failed\n' >&2
+          exit 1
+        fi ;;
+      classpath) printf 'mock-classpath\n' ;;
+      test)
+        mkdir -p generated/test-reports
+        printf '<testsuite tests="1" failures="0" errors="0"/>\n' > generated/test-reports/TEST-mock.xml ;;
+      resolve) : ;;
+      run) printf 'TEMPLATE_SMOKE_STARTED\n' ;;
+      *) printf 'unexpected mock command: %s\n' "$1" >&2; exit 2 ;;
+    esac ;;
+  *) printf 'unexpected Java arguments\n' >&2; exit 2 ;;
+esac
