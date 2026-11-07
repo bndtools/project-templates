@@ -5,5 +5,7 @@ generated/
 .classpath
 .project
 .settings/
+build/
+__pycache__/
 testbed/.cache/
 testbed/work/

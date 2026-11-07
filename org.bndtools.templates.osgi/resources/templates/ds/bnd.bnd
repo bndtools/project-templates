@@ -1,7 +1,7 @@
 -buildpath: \
-	osgi.annotation; version=7.0.0,\
-	osgi.core; version=7.0.0,\
-	osgi.cmpn; version=7.0.0
+	osgi.annotation; version=8.1.0,\
+	osgi.core; version=8.0.0,\
+	org.osgi.service.component.annotations; version=1.5.1
 
 -testpath: \
 	\${junit},\

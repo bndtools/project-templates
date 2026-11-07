@@ -1,9 +1,9 @@
-Bundle-Version: 7.0.0.${tstamp}
+Bundle-Version: 7.5.0.${tstamp}
 
 -includeresource: resources
 -resourceonly: true
 
-category: OSGi Release 7 Templates (with OSGi enRoute repositories)
+category: OSGi Templates (bnd 7.5, Java 17)
 
 project-template-component:\
 	org.bndtools.template; org.bndtools.template=project;\

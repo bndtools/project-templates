@@ -9,7 +9,7 @@ die "usage: templates.pl <templates> <workspace>\n" unless defined $workspace;
 my %values = (
     srcDir => 'src/main/java', testSrcDir => 'src/test/java',
     basePackageDir => 'org/bndtools/templates/smoke',
-    basePackageName => 'org.bndtools.templates.smoke', javaLevel => '8',
+    basePackageName => 'org.bndtools.templates.smoke', javaLevel => '17',
     fileName => 'template-launch.bndrun',
 );
 

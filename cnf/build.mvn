@@ -1,0 +1,26 @@
+# Build-time dependencies referenced by the project templates
+org.osgi:osgi.annotation:8.1.0
+org.osgi:osgi.core:8.0.0
+org.osgi:org.osgi.annotation.bundle:2.0.0
+org.osgi:org.osgi.annotation.versioning:1.1.2
+org.osgi:org.osgi.service.component.annotations:1.5.1
+org.osgi:org.osgi.service.configurator:1.0.1
+org.osgi:org.osgi.service.jaxrs:1.0.1
+org.osgi:org.osgi.service.jpa:1.1.1
+org.osgi:org.osgi.service.servlet:2.0.0
+org.osgi:org.osgi.service.transaction.control:1.0.0
+org.osgi:org.osgi.util.promise:1.3.0
+org.osgi:org.osgi.util.function:1.2.0
+
+# Jakarta Servlet 6.1 (also exports javax.servlet)
+org.apache.felix:org.apache.felix.http.servlet-api:6.1.0
+
+# javax-based; no Jakarta-capable Aries release exists
+org.apache.aries.spec:org.apache.aries.javax.jax.rs-api:1.0.4
+org.apache.aries.jpa.javax.persistence:javax.persistence_2.1:2.7.3
+
+org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.13.2_1
+org.mockito:mockito-core:5.24.0
+net.bytebuddy:byte-buddy:1.18.16
+net.bytebuddy:byte-buddy-agent:1.18.16
+org.objenesis:objenesis:3.6

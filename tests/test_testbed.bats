@@ -73,6 +73,7 @@ mock_downloads() {
   [[ ! -d "$directory/workspace" ]]
   [[ -f "$directory/REPORT.md" ]]
   [[ -f "$directory/logs/01-build.log" ]]
+  [[ -n "$(find "$directory" -name 'smoke-*.marker' -print -quit)" ]]
   grep -q 'Result: \*\*PASS\*\*' "$directory/REPORT.md"
 }
 

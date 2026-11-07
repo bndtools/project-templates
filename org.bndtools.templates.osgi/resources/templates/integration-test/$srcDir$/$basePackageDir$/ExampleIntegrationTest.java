@@ -3,12 +3,9 @@ package $basePackageName$;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ExampleIntegrationTest {
 
 	private final BundleContext context = FrameworkUtil.getBundle(ExampleIntegrationTest.class).getBundleContext();
