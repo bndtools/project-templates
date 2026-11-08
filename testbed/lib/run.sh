@@ -88,7 +88,8 @@ for relative in "${launches[@]}"; do
   else
     marker="$work/smoke-$((step_number + 1)).marker"
     rm -f -- "$marker"
-    export TEMPLATE_SMOKE_MARKER="$(native_path "$marker")"
+    TEMPLATE_SMOKE_MARKER="$(native_path "$marker")"
+    export TEMPLATE_SMOKE_MARKER
     command_step run "$relative" "$workspace" 60 "$java" -jar "$bnd_jar" run "$relative"
     unset TEMPLATE_SMOKE_MARKER
     status=FAIL
