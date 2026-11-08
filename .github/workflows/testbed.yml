@@ -12,6 +12,12 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '37 4 * * 1'
+  workflow_call:
+    inputs:
+      bnd_artifact:
+        description: Same-run artifact containing the source-built biz.aQute.bnd.jar
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -35,9 +41,15 @@ jobs:
       - name: Release, newer RC and latest snapshot
         id: versions
         shell: bash
+        env:
+          BND_ARTIFACT: ${{ inputs.bnd_artifact }}
         run: |
-          versions="$(bash testbed/lib/fetch-bnd.sh --matrix)"
-          matrix="$(printf '%s\n' "$versions" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+          if [[ -n "$BND_ARTIFACT" ]]; then
+            matrix='["master"]'
+          else
+            versions="$(bash testbed/lib/fetch-bnd.sh --matrix)"
+            matrix="$(printf '%s\n' "$versions" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+          fi
           echo "bnd=$matrix" >> "$GITHUB_OUTPUT"
           printf 'bnd matrix: %s\n' "$matrix" >> "$GITHUB_STEP_SUMMARY"
 
@@ -53,6 +65,13 @@ jobs:
         bnd: ${{ fromJSON(needs.plan.outputs.bnd) }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download source-built bnd CLI
+        if: inputs.bnd_artifact != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.bnd_artifact }}
+          path: bnd-cli
 
       - uses: actions/setup-java@v4
         with:
@@ -80,13 +99,23 @@ jobs:
 
       - name: Test project templates
         shell: bash
+        env:
+          BND_SPEC: ${{ matrix.bnd }}
+          BND_ARTIFACT: ${{ inputs.bnd_artifact }}
         run: |
           BASH_BIN=bash
           if [[ "$RUNNER_OS" == macOS ]]; then
             BASH_BIN="$(brew --prefix)/bin/bash"
             export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
           fi
-          "$BASH_BIN" testbed/testbed.sh --bnd "${{ matrix.bnd }}" --work-dir testbed/work/ci
+          if [[ -n "$BND_ARTIFACT" ]]; then
+            BND_SPEC="$PWD/bnd-cli/biz.aQute.bnd.jar"
+            if [[ ! -s "$BND_SPEC" ]]; then
+              echo "::error::Source-built bnd CLI missing: $BND_SPEC"
+              exit 1
+            fi
+          fi
+          "$BASH_BIN" testbed/testbed.sh --bnd "$BND_SPEC" --work-dir testbed/work/ci
 
       - name: Job summary
         if: always()

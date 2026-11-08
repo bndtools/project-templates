@@ -129,6 +129,16 @@ Tests cover rendering, argument validation, successful and failed mock CLI
 runs, workspace retention and real JDK XML parsing. The mock CLI needs no
 network or Maven dependencies.
 
+### Independent CI for bnd master
+
+[Poll bnd master](../.github/workflows/poll-bnd-master.yml) checks the public
+`bndtools/bnd` master revision every 15 minutes and dispatches
+[the source testbed](../.github/workflows/bnd-master.yml) only when that SHA
+changes. The source workflow builds the exact commit, uploads its CLI JAR, and
+calls this repository's testbed workflow to test the generated templates on
+Linux, Windows and macOS. The poller and tests run entirely in this repository;
+they do not add credentials, checks or status updates to `bndtools/bnd`.
+
 [GitHub Actions](../.github/workflows/testbed.yml) discovers the same release,
 optional newer RC and snapshot matrix, then runs Bats and the real CLI testbed
 on Linux, Windows and macOS. Reports, command logs and failed workspaces are
@@ -139,4 +149,4 @@ In GitHub, open **Actions > Project template testbed > a run**. Each matrix
 job has a check summary and an artifact named `testbed-<os>-<bnd>`. The
 **Combined report** job publishes artifact **testbed-all**: its top-level
 `REPORT.md` links to every platform/version report. These CI artifacts exist
-only after the workflow has run; local results stay in `testbed/work/`.
+only after the workflow has run; local results remain in `testbed/work/`.
