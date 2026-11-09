@@ -1,13 +1,13 @@
 <form>
 	<p>Creates a project for developing Components with Declarative Services.</p>
 	<p>The following dependencies are added to the build path:</p>
-	<li>OSGi Annotation 7.0.0</li>
-	<li>OSGi Core 7.0.0</li>
-	<li>OSGi Compendium 7.0.0</li>
+	<li>OSGi Annotation 8.1.0</li>
+	<li>OSGi Core 8.0.0</li>
+	<li>OSGi DS Annotations 1.5.1</li>
 	<p>... and the following are added to the test path:</p>
 	<li>JUnit 4</li>
-	<li>Mockito 2.13.0</li>
-	<li>Objenesis 2.6</li>
-	<li>Byte Buddy 1.7.9</li>
-	<li>Byte Buddy Agent 1.7.9</li>
+	<li>Mockito 5.24.0</li>
+	<li>Objenesis 3.6</li>
+	<li>Byte Buddy 1.18.16</li>
+	<li>Byte Buddy Agent 1.18.16</li>
 </form>

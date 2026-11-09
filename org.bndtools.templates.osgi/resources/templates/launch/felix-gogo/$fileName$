@@ -1,5 +1,5 @@
--runfw: org.eclipse.osgi;version=3.13
--runee: JavaSE-1.8
+-runfw: org.eclipse.osgi;version=3.24.300
+-runee: JavaSE-17
 -runprovidedcapabilities: \${native_capability}
 
 -resolve.effective: active

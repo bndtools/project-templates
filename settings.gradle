@@ -1,5 +1,8 @@
 buildscript {
-	repositories { mavenCentral() }
+	repositories {
+		mavenCentral()
+		maven { url 'https://bndtools.jfrog.io/artifactory/libs-release' }
+	}
 	dependencies { classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:${bnd_version}" }
 }
 

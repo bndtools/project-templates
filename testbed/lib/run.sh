@@ -86,9 +86,14 @@ for relative in "${launches[@]}"; do
   elif (( last_exit != 0 )); then
     record run "$relative" SKIP 0 '-' 'resolution failed'
   else
+    marker="$work/smoke-$((step_number + 1)).marker"
+    rm -f -- "$marker"
+    TEMPLATE_SMOKE_MARKER="$(native_path "$marker")"
+    export TEMPLATE_SMOKE_MARKER
     command_step run "$relative" "$workspace" 60 "$java" -jar "$bnd_jar" run "$relative"
+    unset TEMPLATE_SMOKE_MARKER
     status=FAIL
-    if (( last_exit <= 1 )) && grep -q 'TEMPLATE_SMOKE_STARTED' "$last_log"; then
+    if (( last_exit <= 1 )) && [[ -f "$marker" ]]; then
       if ! grep -q '^Errors' "$last_log" || grep -q 'Exit code remote process 117:' "$last_log"; then status=PASS; fi
     fi
     record run "$relative" "$status" "$last_exit" "$last_log" 'requires startup marker'

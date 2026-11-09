@@ -30,7 +30,9 @@ case "$1" in
         mkdir -p generated/test-reports
         printf '<testsuite tests="1" failures="0" errors="0"/>\n' > generated/test-reports/TEST-mock.xml ;;
       resolve) : ;;
-      run) printf 'TEMPLATE_SMOKE_STARTED\n' ;;
+      run)
+        [[ -z "${TEMPLATE_SMOKE_MARKER:-}" ]] || printf 'TEMPLATE_SMOKE_STARTED' > "$TEMPLATE_SMOKE_MARKER"
+        printf 'TEMPLATE_SMOKE_STARTED\n' ;;
       *) printf 'unexpected mock command: %s\n' "$1" >&2; exit 2 ;;
     esac ;;
   *) printf 'unexpected Java arguments\n' >&2; exit 2 ;;

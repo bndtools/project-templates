@@ -9,9 +9,9 @@ Import-Package: org.osgi.framework.*;version="[1.8,2)",*
 	\${junit},\
 	\${mockito},\
 	\${mockito-deps},\
-	osgi.annotation; version=7.0.0,\
-	osgi.core; version=7.0.0,\
-	osgi.cmpn; version=7.0.0
+	osgi.annotation; version=8.1.0,\
+	osgi.core; version=8.0.0
+
 
 $if(javaLevel)$
 javac.source: $javaLevel$
@@ -31,5 +31,5 @@ Bundle-Version: 0.0.0.\${tstamp}
 -runsystempackages.objenesis: sun.misc,sun.reflect
 
 # Use Equinox by default
--runfw: org.eclipse.osgi;version=3.13
+-runfw: org.eclipse.osgi;version=3.24.300
 -runvm: -ea

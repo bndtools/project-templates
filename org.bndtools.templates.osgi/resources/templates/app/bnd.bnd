@@ -2,8 +2,8 @@ Bundle-Version: 1.0.0.\${tstamp}
 
 -baseline: *
 -buildpath: \
-  osgi.annotation; version=7.0.0,\
-  osgi.cmpn; version=7.0.0
+  osgi.annotation; version=8.1.0,\
+  org.osgi.service.configurator; version=1.0.1
 
 $if(javaLevel)$
 javac.source: $javaLevel$
